@@ -1,8 +1,9 @@
 package users
 
 type IUserService interface {
-	CreateUser(dto UserDto) (User, error)
+	CreateUser(dto UserDto) (int64, error)
+	GetUser(id int64) (User, error)
 	GetUsers() ([]User, error)
-	UpdateUser(update User) (User, error)
+	UpdateUser(update User) error
 	DeleteUser(id int) error
 }

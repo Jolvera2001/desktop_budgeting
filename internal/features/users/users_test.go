@@ -1,8 +1,13 @@
 package users
 
-import(
+import (
+	"desktop_budgeting/internal/database"
 	"testing"
 )
+
+func TestImplementInterface(t *testing.T) {
+	var _ IUserService = &UserService{client: &database.SqliteClient{}}
+}
 
 func TestCreateUser(t *testing.T) {
 
