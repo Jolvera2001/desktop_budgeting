@@ -12,7 +12,7 @@ import (
 const file string = "dev.sqlite"
 
 type SqliteClient struct {
-	db *sql.DB
+	Db *sql.DB
 }
 
 func (c *SqliteClient) ConnectToDB() error {
@@ -39,6 +39,21 @@ func (c *SqliteClient) ConnectToDB() error {
 		return err
 	}
 
-	c.db = db
+	c.Db = db
+	return nil
+}
+
+func (c *SqliteClient) SetUpDB() error {
+	if c.Db == nil {
+		return fmt.Errorf("db connection not set up")
+	}
+
+	sqlScript := userTable + budgetTable + transactionsTable
+
+	_, err := c.Db.Exec(sqlScript)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

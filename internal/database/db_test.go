@@ -12,5 +12,5 @@ func TestConnection(t *testing.T) {
 	err := client.ConnectToDB()
 
 	assert.Nil(t, err)
-	assert.NotNil(t, client.db)
+	assert.NotNil(t, client.Db)
 }

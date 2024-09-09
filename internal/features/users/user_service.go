@@ -5,11 +5,11 @@ import(
 )
 
 type UserService struct {
-	db *database.SqliteClient
+	client *database.SqliteClient
 }
 
 func (s *UserService) CreateUser(dto UserDto) (User, error) {
-
+	
 }
 
 func (s *UserService) GetUsers() ([]User, error) {
