@@ -1,18 +1,16 @@
 package database
 
-import(
+import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConnection(t *testing.T) {
 	client := SqliteClient{}
+
 	err := client.ConnectToDB()
 
-	if err != nil {
-		t.Fatalf("Expected no error, go %v", err)
-	}
-
-	if client.db == nil {
-		t.Fatalf("Expected a valid DB connection, go nil")
-	}
+	assert.Nil(t, err)
+	assert.NotNil(t, client.db)
 }
