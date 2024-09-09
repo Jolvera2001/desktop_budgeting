@@ -7,7 +7,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 
-	db "desktop-budgeting/internal/database"
+	db "desktop_budgeting/internal/database"
 )
 
 //go:embed all:frontend/dist
@@ -18,13 +18,16 @@ func main() {
 	app := NewApp()
 
 	// establishing db
-	client := db.SqliteClient{}
-	client.ConnectToDB()
+	client := &db.SqliteClient{}
+	err := client.ConnectToDB()
+	if err != nil {
+		panic(err)
+	}
 
 	// passing on to other structs
 
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Title:  "Budgeting",
 		Width:  1024,
 		Height: 768,
