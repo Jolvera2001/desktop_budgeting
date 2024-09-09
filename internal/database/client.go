@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const file string = "dev.sqlite"

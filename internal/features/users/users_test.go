@@ -1,4 +1,4 @@
-package tests
+package users
 
 // create user
 // edit user
