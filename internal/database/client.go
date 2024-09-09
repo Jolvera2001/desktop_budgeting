@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	_ "github.com/mattn/go-sqlite3"
+
+	_ "modernc.org/sqlite"
 )
 
 const file string = "dev.sqlite"
@@ -28,7 +29,12 @@ func (c *SqliteClient) ConnectToDB() error {
 
 	dbFilePath := filepath.Join(appFolderPath, file)
 
-	db, err := sql.Open("sqlite3", dbFilePath)
+	db, err := sql.Open("sqlite", dbFilePath)
+	if err != nil {
+		return err
+	}
+
+	err = db.Ping()
 	if err != nil {
 		return err
 	}
