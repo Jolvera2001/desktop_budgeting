@@ -35,7 +35,7 @@ func TestCreateUser(t *testing.T) {
 	assert.Nil(t, err, "error should be nil")
 	assert.Greater(t, id, int64(0), "there should be an id to lead back to row")
 	assert.NotEmpty(t, userList, "list should not be empty")
-	
+
 	tearDown(id)
 }
 
@@ -95,6 +95,7 @@ func TestUpdateUser(t *testing.T) {
 	update := userToChange
 	update.Name = "updated"
 	err = service.UpdateUser(update)
+	assert.Nil(t, err)
 	updatedUser, err := service.GetUser(id)
 
 	assert.Nil(t, err, "there should not be an error")
