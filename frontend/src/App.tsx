@@ -9,6 +9,7 @@ import {
     CardTitle
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Input } from '@/components/ui/input';
 
 function App() {
     const [resultText, setResultText] = useState("Please enter your name below 👇");
@@ -22,7 +23,19 @@ function App() {
 
     return (
         <>
-            <div className='flex items-center justify-center h-screen w-screen'>
+            <div className='flex flex-col space-y-4 items-center justify-center h-screen w-screen'>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Example Page</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className='space-y-4'>
+                            <p>{resultText}</p>
+                            <Input onChange={updateName}></Input>
+                            <Button onClick={greet}>Submit</Button>
+                        </div>
+                    </CardContent>
+                </Card>
                 <Card>
                     <CardHeader>
                         <CardTitle>Select User:</CardTitle>
