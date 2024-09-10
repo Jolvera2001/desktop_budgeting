@@ -6,11 +6,11 @@ import (
 )
 
 type UserService struct {
-	client *sql.DB
+	Client *sql.DB
 }
 
 func (s *UserService) CreateUser(dto UserDto) (int64, error) {
-	res, err := s.client.Exec("INSERT INTO users (email, name, budgetPeriod, budgetStart) VALUES (?, ?, ?, ?)",
+	res, err := s.Client.Exec("INSERT INTO users (email, name, budgetPeriod, budgetStart) VALUES (?, ?, ?, ?)",
 		dto.Email, dto.Name, dto.BudgetPeriod, dto.BudgetStart.Time)
 	if err != nil {
 		return 0, fmt.Errorf("add user: %v", err)
@@ -26,7 +26,7 @@ func (s *UserService) CreateUser(dto UserDto) (int64, error) {
 
 func (s *UserService) GetUser(id int64) (User, error) {
 	var user User
-	row := s.client.QueryRow("SELECT * FROM users WHERE id = ?", id)
+	row := s.Client.QueryRow("SELECT * FROM users WHERE id = ?", id)
 
 	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.BudgetPeriod, &user.BudgetStart); err != nil {
 		return User{}, fmt.Errorf("error fetching user: %v", err)
@@ -38,7 +38,7 @@ func (s *UserService) GetUser(id int64) (User, error) {
 func (s *UserService) GetUsers() ([]User, error) {
 	var users []User
 
-	rows, err := s.client.Query("SELECT * FROM users")
+	rows, err := s.Client.Query("SELECT * FROM users")
 	if err != nil {
 		return []User{}, err
 	}
@@ -66,7 +66,7 @@ func (s *UserService) GetUsers() ([]User, error) {
 }
 
 func (s *UserService) UpdateUser(update User) error {
-	_, err := s.client.Exec("UPDATE users SET name = ?, email = ?, budgetPeriod = ?, budgetStart = ? WHERE id = ?;",
+	_, err := s.Client.Exec("UPDATE users SET name = ?, email = ?, budgetPeriod = ?, budgetStart = ? WHERE id = ?;",
 		update.Name, update.Email, update.BudgetPeriod, update.BudgetStart, update.ID)
 	if err != nil {
 		return fmt.Errorf("error updating user: %v", err)
@@ -76,7 +76,7 @@ func (s *UserService) UpdateUser(update User) error {
 }
 
 func (s *UserService) DeleteUser(id int64) error {
-	_, err := s.client.Exec("DELETE FROM users WHERE id = ?", id)
+	_, err := s.Client.Exec("DELETE FROM users WHERE id = ?", id)
 	if err != nil {
 		return fmt.Errorf("error deleting user: %v", err)
 	}
