@@ -1,16 +1,16 @@
 package users
 
 import (
-	"desktop_budgeting/internal/database"
+	"database/sql"
 	"fmt"
 )
 
 type UserService struct {
-	client *database.SqliteClient
+	client *sql.DB
 }
 
 func (s *UserService) CreateUser(dto UserDto) (int64, error) {
-	res, err := s.client.Db.Exec("INSERT INTO users (email, name) VALUES (?, ?)", dto.Email, dto.Name)
+	res, err := s.client.Exec("INSERT INTO users (email, name) VALUES (?, ?)", dto.Email, dto.Name)
 	if err != nil {
 		return 0, fmt.Errorf("add user: %v", err)
 	}
@@ -25,7 +25,7 @@ func (s *UserService) CreateUser(dto UserDto) (int64, error) {
 
 func (s *UserService) GetUser(id int64) (User, error) {
 	var user User
-	row := s.client.Db.QueryRow("SELECT * FROM users WHERE id = ?", id)
+	row := s.client.QueryRow("SELECT * FROM users WHERE id = ?", id)
 
 	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.BudgetStart, &user.BudgetPeriod); err != nil {
 		return User{}, fmt.Errorf("error fetching user: %v", err)
@@ -37,7 +37,7 @@ func (s *UserService) GetUser(id int64) (User, error) {
 func (s *UserService) GetUsers() ([]User, error) {
 	var users []User
 
-	rows, err := s.client.Db.Query("SELECT * FROM users")
+	rows, err := s.client.Query("SELECT * FROM users")
 	if err != nil {
 		return []User{}, err
 	}
@@ -46,9 +46,14 @@ func (s *UserService) GetUsers() ([]User, error) {
 
 	for rows.Next() {
 		var user User
-		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.BudgetStart, &user.BudgetPeriod); err != nil {
+		var budgetPeriod sql.NullInt64
+
+		if err := rows.Scan(&user.ID, &user.Email, &user.Name, &budgetPeriod, &user.BudgetStart); err != nil {
 			return nil, fmt.Errorf("error fetching users: %v", err)
 		}
+
+		bp := budgetPeriodEnum(budgetPeriod.Int64)
+		user.BudgetPeriod = &bp
 		users = append(users, user)
 	}
 
@@ -60,7 +65,7 @@ func (s *UserService) GetUsers() ([]User, error) {
 }
 
 func (s *UserService) UpdateUser(update User) error {
-	_, err := s.client.Db.Exec("UPDATE users SET name = ?, email = ?, budgetPeriod = ?, budgetStart = ? WHERE id = ?;",
+	_, err := s.client.Exec("UPDATE users SET name = ?, email = ?, budgetPeriod = ?, budgetStart = ? WHERE id = ?;",
 		update.Name, update.Email, update.BudgetPeriod, update.BudgetStart, update.ID)
 	if err != nil {
 		return fmt.Errorf("error updating user: %v", err)
@@ -69,8 +74,8 @@ func (s *UserService) UpdateUser(update User) error {
 	return nil
 }
 
-func (s *UserService) DeleteUser(id int) error {
-	_, err := s.client.Db.Exec("DELETE FROM users WHERE id = ?", id)
+func (s *UserService) DeleteUser(id int64) error {
+	_, err := s.client.Exec("DELETE FROM users WHERE id = ?", id)
 	if err != nil {
 		return fmt.Errorf("error deleting user: %v", err)
 	}

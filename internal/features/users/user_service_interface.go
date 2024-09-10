@@ -5,5 +5,5 @@ type IUserService interface {
 	GetUser(id int64) (User, error)
 	GetUsers() ([]User, error)
 	UpdateUser(update User) error
-	DeleteUser(id int) error
+	DeleteUser(id int64) error
 }

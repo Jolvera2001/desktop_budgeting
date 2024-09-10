@@ -1,8 +1,10 @@
 package users
 
-import "time"
+import (
+	"database/sql"
+)
 
-type budgetPeriod int
+type budgetPeriodEnum int
 
 const (
 	Monthly = iota + 1
@@ -11,9 +13,9 @@ const (
 )
 
 type User struct {
-	ID           int          `json:"_id"`
-	Email        string       `json:"email"`
-	Name         string       `json:"name"`
-	BudgetPeriod budgetPeriod `json:"budget_period"`
-	BudgetStart  time.Time    `json:"budget_start"`
+	ID           int               `json:"_id"`
+	Email        string            `json:"email"`
+	Name         string            `json:"name"`
+	BudgetPeriod *budgetPeriodEnum `json:"budget_period"`
+	BudgetStart  sql.NullTime      `json:"budget_start"`
 }
