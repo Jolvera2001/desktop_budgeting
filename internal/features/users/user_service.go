@@ -10,7 +10,8 @@ type UserService struct {
 }
 
 func (s *UserService) CreateUser(dto UserDto) (int64, error) {
-	res, err := s.client.Exec("INSERT INTO users (email, name) VALUES (?, ?)", dto.Email, dto.Name)
+	res, err := s.client.Exec("INSERT INTO users (email, name, budgetPeriod, budgetStart) VALUES (?, ?, ?, ?)",
+		dto.Email, dto.Name, dto.BudgetPeriod, dto.BudgetStart.Time)
 	if err != nil {
 		return 0, fmt.Errorf("add user: %v", err)
 	}
@@ -27,7 +28,7 @@ func (s *UserService) GetUser(id int64) (User, error) {
 	var user User
 	row := s.client.QueryRow("SELECT * FROM users WHERE id = ?", id)
 
-	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.BudgetStart, &user.BudgetPeriod); err != nil {
+	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.BudgetPeriod, &user.BudgetStart); err != nil {
 		return User{}, fmt.Errorf("error fetching user: %v", err)
 	}
 
