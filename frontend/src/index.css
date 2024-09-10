@@ -64,3 +64,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "nunito";
+  src: url("./assets/fonts/nunito-v16-latin-regular.woff2") format("nunito");
+  font-weight: normal;
+}

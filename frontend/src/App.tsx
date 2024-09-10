@@ -1,6 +1,14 @@
 import {useState} from 'react';
-import logo from './assets/images/logo-universal.png';
 import {Greet} from "../wailsjs/go/main/App";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardFooter,
+    CardDescription,
+    CardTitle
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 function App() {
     const [resultText, setResultText] = useState("Please enter your name below 👇");
@@ -14,6 +22,19 @@ function App() {
 
     return (
         <>
+            <div className='flex items-center justify-center h-screen w-screen'>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Select User:</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+
+                    </CardContent>
+                    <CardFooter>
+                        <Button>Add User</Button>
+                    </CardFooter>
+                </Card>
+            </div>
         </>
     )
 }
