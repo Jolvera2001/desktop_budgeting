@@ -10,3 +10,5 @@ const useUserStore = create<UserState>()((set) => ({
     selectedUser: null,
     setUser: (user) => set({ selectedUser: user}),
 }));
+
+export default useUserStore

@@ -2,6 +2,14 @@ import { useEffect, useState } from 'react';
 import { users } from "../../wailsjs/go/models"
 import { Button } from "@/components/ui/button"
 import { Input } from '@/components/ui/input';
+import useUserStore from '@/store/UserStore'
+import { useNavigate } from 'react-router-dom';
+import { Label } from '@/components/ui/label'
+import { 
+    Popover,
+    PopoverTrigger,
+    PopoverContent
+ } from '@/components/ui/popover'
 import {
     Card,
     CardContent,
@@ -19,13 +27,14 @@ import {
 } from "../../wailsjs/go/users/UserService"
 
 function UserSelection() {
+    const navigate = useNavigate();
+    const { selectedUser, setUser } = useUserStore();
     const [userForm, setUserForm] = useState<users.UserDto | null>(null);
     const [userList, setUserList] = useState<users.User[] | null>(null);
-    const [selectedUser, setSelectedUser] = useState<users.User | null>(null);
-    const updateUserList = (result: users.User[]) => setUserList(result)
-    const selectUser = (user: users.User) => setSelectedUser(user)
-
-    const getUsers = () => GetUsers().then(updateUserList)
+    const [chosenUser, setSelectedUser] = useState<users.User | null>(null);
+    const updateUserList = (result: users.User[]) => setUserList(result);
+    const selectUser = (user: users.User) => setSelectedUser(user);
+    const getUsers = () => GetUsers().then(updateUserList);
     const deleteUser = async (userId: number | undefined) => {
         if (userId !== undefined) {
             try {
@@ -38,8 +47,17 @@ function UserSelection() {
         } else {
             console.log("no user selected to complete process");
         }
-    }
+    };
 
+    const login = () => {
+        if (chosenUser == null) {
+            console.log("No user chosen")
+        } else {
+            setUser(chosenUser);
+            navigate("/home");
+        }
+    };
+    
     useEffect(() => {
         getUsers();
         console.log(userList);
@@ -63,14 +81,13 @@ function UserSelection() {
         }
 
         return cycleString;
-    }
-
+    };
 
     return (
         <>
             <div className='flex flex-col space-y-4 items-center justify-center h-screen w-screen'>
                 <p>Debug area</p>
-                <p>Selected user: {selectedUser ? selectedUser._id : "none selected"}</p>
+                <p>Selected user: {chosenUser ? chosenUser._id : "none selected"}</p>
                 <Card className='w-1/2'>
                     <CardHeader>
                         <CardTitle>Select User:</CardTitle>
@@ -94,9 +111,41 @@ function UserSelection() {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <div className='flex flex-row space-x-4'>
-                            <Button>Add User</Button>
-                            <Button className='bg-red-950' onClick={() => deleteUser(selectedUser?._id)}>Delete User</Button>
+                        <div className='flex flex-row gap-4 w-full'>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button>Add User</Button>
+                                </PopoverTrigger>
+                                <PopoverContent className='w-80'>
+                                    <div className="grid gap-4">
+                                        <div className='space-y-2'>
+                                            <h1 className='font-medium leading-none'>Fill out the fields below</h1>
+                                        </div>
+                                        <div className='grid gap-2'>
+                                            <div className='grid grid-cols-3 items-center gap-4'>
+                                                <Label htmlFor='name'>Name</Label>
+                                                <Input
+                                                    id="name" 
+                                                />
+                                            </div>
+                                            <div className='grid grid-cols-3 items-center gap-4'>
+                                                <Label htmlFor='email'>Email</Label>
+                                                <Input
+                                                    id="email"
+                                                />
+                                            </div>
+                                            <div className='grid grid-cols-3 items-center gap-4'>
+                                                <Label htmlFor='budgetPeriod'>Budget Period</Label>
+                                                <Input
+                                                    id="budgetPeriod"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                            <Button className='bg-red-950' onClick={() => deleteUser(chosenUser?._id)}>Delete User</Button>
+                            <Button className='bg-green-900 ml-auto' onClick={login}>Login</Button>
                         </div>
                     </CardFooter>
                 </Card>
