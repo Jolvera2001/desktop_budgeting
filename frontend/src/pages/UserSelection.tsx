@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import useUserStore from '@/store/UserStore'
 import { useNavigate } from 'react-router-dom';
 import { Label } from '@/components/ui/label'
-import { Plus } from 'lucide-react';
+import { House, Key, Plus, Trash } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
     CreateUser,
@@ -25,6 +25,24 @@ function UserSelection() {
     const [newUser, setNewUser] = useState({name: "", email: "", budgetPeriod: ""});
     const updateUserList = (result: users.User[]) => setUserList(result);
     const getUsers = () => GetUsers().then(updateUserList);
+
+    const handleLogin = () => {
+
+    }
+
+    const handleDelete = async () => {
+        if (selectedUser?._id) {
+            try {
+                await DeleteUser(selectedUser?._id);
+                await getUsers();
+                setUser(null);
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            console.log("how did you get here?");
+        }
+    }
 
     const handleSelectUser = (user: users.User) => {
         setUser(user)
@@ -46,6 +64,8 @@ function UserSelection() {
                 console.log("Creating user...")
                 await CreateUser(newUserDto);
                 await getUsers();
+
+                setNewUser({ name: "", email: "", budgetPeriod: "" })
             } catch (error) {
                 console.log(error);
             }
@@ -96,7 +116,6 @@ function UserSelection() {
                                 value={newUser.name}
                                 onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
                             />
-                            <p>Current name: {newUser.name}</p>
                         </div>
                         <div>
                             <Label htmlFor='email'>Email</Label>
@@ -105,7 +124,6 @@ function UserSelection() {
                                 value={newUser.email}
                                 onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                             />
-                            <p>Current name: {newUser.email}</p>
                         </div>
                         <div>
                             <Label htmlFor='budgetPeriod'>Budget Period</Label>
@@ -129,15 +147,18 @@ function UserSelection() {
                                     </div>
                                 </div>
                             </RadioGroup>
-                            <p>Current budget: {newUser.budgetPeriod}</p>
                         </div>
                         <Button type='submit'><Plus />Add User</Button>
                     </form>
                     {selectedUser && (
                         <div className='mt-8'>
                             <h3 className="text-xl font-semibold mb-2">Selected User</h3>
-                            <p>Name: {newUser.name}</p>
-                            <p>Email: {newUser.email}</p>
+                            <p>Name: {selectedUser.name}</p>
+                            <p>Email: {selectedUser.email}</p>
+                            <div className='flex flex-row gap-5 mt-4'>
+                                <Button className='gap-1 bg-green-700'><House />Login</Button>
+                                <Button className='gap-1 bg-red-800' onClick={handleDelete}><Trash />Delete</Button>
+                            </div>   
                         </div>
                     )}
                 </div>
