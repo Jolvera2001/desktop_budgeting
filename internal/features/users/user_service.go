@@ -10,8 +10,8 @@ type UserService struct {
 }
 
 func (s *UserService) CreateUser(dto UserDto) (int64, error) {
-	res, err := s.Client.Exec("INSERT INTO users (email, name, budgetPeriod, budgetStart) VALUES (?, ?, ?, ?)",
-		dto.Email, dto.Name, dto.BudgetPeriod, dto.BudgetStart.Time)
+	res, err := s.Client.Exec("INSERT INTO users (email, name, budgetPeriod) VALUES (?, ?, ?)",
+		dto.Email, dto.Name, dto.BudgetPeriod)
 	if err != nil {
 		return 0, fmt.Errorf("add user: %v", err)
 	}
@@ -28,7 +28,7 @@ func (s *UserService) GetUser(id int64) (User, error) {
 	var user User
 	row := s.Client.QueryRow("SELECT * FROM users WHERE id = ?", id)
 
-	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.BudgetPeriod, &user.BudgetStart); err != nil {
+	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.BudgetPeriod); err != nil {
 		return User{}, fmt.Errorf("error fetching user: %v", err)
 	}
 
@@ -49,7 +49,7 @@ func (s *UserService) GetUsers() ([]User, error) {
 		var user User
 		var budgetPeriod sql.NullInt64
 
-		if err := rows.Scan(&user.ID, &user.Email, &user.Name, &budgetPeriod, &user.BudgetStart); err != nil {
+		if err := rows.Scan(&user.ID, &user.Email, &user.Name, &budgetPeriod); err != nil {
 			return nil, fmt.Errorf("error fetching users: %v", err)
 		}
 
@@ -66,8 +66,8 @@ func (s *UserService) GetUsers() ([]User, error) {
 }
 
 func (s *UserService) UpdateUser(update User) error {
-	_, err := s.Client.Exec("UPDATE users SET name = ?, email = ?, budgetPeriod = ?, budgetStart = ? WHERE id = ?;",
-		update.Name, update.Email, update.BudgetPeriod, update.BudgetStart, update.ID)
+	_, err := s.Client.Exec("UPDATE users SET name = ?, email = ?, budgetPeriod = ? WHERE id = ?;",
+		update.Name, update.Email, update.BudgetPeriod, update.ID)
 	if err != nil {
 		return fmt.Errorf("error updating user: %v", err)
 	}
