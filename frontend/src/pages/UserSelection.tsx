@@ -27,7 +27,15 @@ function UserSelection() {
     const getUsers = () => GetUsers().then(updateUserList);
 
     const handleLogin = () => {
-
+        if (selectedUser) {
+            try {
+                navigate("/home")
+            } catch (error) {
+                console.log(error)
+            }
+        } else {
+            console.log("no user selected")
+        }
     }
 
     const handleDelete = async () => {
@@ -58,7 +66,6 @@ function UserSelection() {
             newUserDto.name = newUser.name;
             newUserDto.email = newUser.email;
             newUserDto.budget_period = mapBudgetToNum(newUser.budgetPeriod);
-            newUserDto.budget_start = date.getTime()
 
             try {
                 console.log("Creating user...")
@@ -156,7 +163,7 @@ function UserSelection() {
                             <p>Name: {selectedUser.name}</p>
                             <p>Email: {selectedUser.email}</p>
                             <div className='flex flex-row gap-5 mt-4'>
-                                <Button className='gap-1 bg-green-700'><House />Login</Button>
+                                <Button className='gap-1 bg-green-700' onClick={handleLogin}><House />Login</Button>
                                 <Button className='gap-1 bg-red-800' onClick={handleDelete}><Trash />Delete</Button>
                             </div>   
                         </div>
