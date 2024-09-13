@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from '@/components/ui/input';
 import useUserStore from '@/store/UserStore'
 import { useNavigate } from 'react-router-dom';
+import ComboBox from '@/components/helpers/ComboBox'
 import { Label } from '@/components/ui/label'
 import { 
     Popover,
@@ -25,11 +26,14 @@ import {
     GetUsers,
     DeleteUser
 } from "../../wailsjs/go/users/UserService"
+import { Plus } from 'lucide-react';
+import { Toaster } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 function UserSelection() {
     const navigate = useNavigate();
     const { selectedUser, setUser } = useUserStore();
-    const [userForm, setUserForm] = useState<users.UserDto | null>(null);
+    const [formBudgetPeriod, setFormBudgetPeriod] = useState<string>("")
     const [userList, setUserList] = useState<users.User[] | null>(null);
     const [chosenUser, setSelectedUser] = useState<users.User | null>(null);
     const updateUserList = (result: users.User[]) => setUserList(result);
@@ -51,28 +55,35 @@ function UserSelection() {
 
     const login = () => {
         if (chosenUser == null) {
-            console.log("No user chosen")
+            console.log("No user chosen");
+            toast("No user has been chosen");
         } else {
             setUser(chosenUser);
             navigate("/home");
         }
     };
+
+    const addUser = () => {
+        let user: users.User;
+
+        
+    }
     
     useEffect(() => {
         getUsers();
         console.log(userList);
     }, []);
-
-    function mapBudgetCycle(cycle: number | undefined): string {
+        
+        function mapBudgetCycle(cycle: number | undefined): string {
         let cycleString: string;
-
+        
         switch (cycle) {
             case 1:
                 cycleString = "Monthly";
                 break;
-            case 2:
-                cycleString = "Biweekly";
-                break;
+                case 2:
+                    cycleString = "Biweekly";
+                    break;
             case 3:
                 cycleString = "Weekly";
                 break;
@@ -126,19 +137,26 @@ function UserSelection() {
                                                 <Label htmlFor='name'>Name</Label>
                                                 <Input
                                                     id="name" 
+                                                    className="col-span-2 h-8"
                                                 />
                                             </div>
                                             <div className='grid grid-cols-3 items-center gap-4'>
                                                 <Label htmlFor='email'>Email</Label>
                                                 <Input
                                                     id="email"
+                                                    className="col-span-2 h-8"
                                                 />
                                             </div>
                                             <div className='grid grid-cols-3 items-center gap-4'>
                                                 <Label htmlFor='budgetPeriod'>Budget Period</Label>
-                                                <Input
+                                                <ComboBox
                                                     id="budgetPeriod"
+                                                    className="col-span-2 h-8"
+                                                    onChange={(value) => setFormBudgetPeriod(value)}
                                                 />
+                                            </div>
+                                            <div className='grid grid-cols-3 items-center gap-4'>
+                                                <Button>Add <Plus /></Button>
                                             </div>
                                         </div>
                                     </div>
@@ -150,6 +168,7 @@ function UserSelection() {
                     </CardFooter>
                 </Card>
             </div>
+            <Toaster />
         </>
     )
 }
