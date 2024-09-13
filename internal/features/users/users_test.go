@@ -1,10 +1,8 @@
 package users
 
 import (
-	"database/sql"
 	db "desktop_budgeting/internal/database"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -21,12 +19,8 @@ func TestCreateUser(t *testing.T) {
 		Name:         "JohnGoat",
 		Email:        "JohnGoat@test.com",
 		BudgetPeriod: 1,
-		BudgetStart: sql.NullTime{
-			Time:  time.Now(),
-			Valid: true,
-		},
 	}
-	service := UserService{client: testDB.Db}
+	service := UserService{Client: testDB.Db}
 
 	id, err := service.CreateUser(dtoUser)
 	assert.Nil(t, err, "process should not bring up an error")
@@ -45,12 +39,8 @@ func TestGetUser(t *testing.T) {
 		Name:         "DeleteMe!",
 		Email:        "DeleteME!@delete.com",
 		BudgetPeriod: 1,
-		BudgetStart: sql.NullTime{
-			Time:  time.Now(),
-			Valid: true,
-		},
 	}
-	service := UserService{client: testDB.Db}
+	service := UserService{Client: testDB.Db}
 
 	id, err := service.CreateUser(userToDelete)
 	assert.Nil(t, err, "process should not bring up an error")
@@ -65,14 +55,21 @@ func TestGetUser(t *testing.T) {
 func TestGetUsers(t *testing.T) {
 	setup()
 	var users []User
-	service := UserService{client: testDB.Db}
+	userToDelete := UserDto{
+		Name:         "DeleteMe!",
+		Email:        "DeleteME!@delete.com",
+		BudgetPeriod: 1,
+	}
+	service := UserService{Client: testDB.Db}
 
-	users, err := service.GetUsers()
+	id, err := service.CreateUser(userToDelete)
+	assert.Nil(t, err, "process should not bring up an error")
+	users, err = service.GetUsers()
 
 	assert.Nil(t, err, "there should not be an error")
 	assert.NotEmpty(t, users, "user list should not be empty")
 
-	tearDown(0)
+	tearDown(id)
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -81,12 +78,8 @@ func TestUpdateUser(t *testing.T) {
 		Name:         "JohnGoat",
 		Email:        "JohnGoat@test.com",
 		BudgetPeriod: 1,
-		BudgetStart: sql.NullTime{
-			Time:  time.Now(),
-			Valid: true,
-		},
 	}
-	service := UserService{client: testDB.Db}
+	service := UserService{Client: testDB.Db}
 
 	id, err := service.CreateUser(dtoUser)
 	assert.Nil(t, err, "process should not bring up an error")
@@ -110,12 +103,8 @@ func TestDeleteUser(t *testing.T) {
 		Name:         "DeleteMe!",
 		Email:        "DeleteME!@delete.com",
 		BudgetPeriod: 1,
-		BudgetStart: sql.NullTime{
-			Time:  time.Now(),
-			Valid: true,
-		},
 	}
-	service := UserService{client: testDB.Db}
+	service := UserService{Client: testDB.Db}
 
 	id, err := service.CreateUser(userToDelete)
 	assert.Nil(t, err, "process should not bring up an error")

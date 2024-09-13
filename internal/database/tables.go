@@ -6,8 +6,7 @@ const(
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	email TEXT,
 	name TEXT,
-	budgetPeriod INTEGER, 
-	budgetStart DATETIME
+	budgetPeriod INTEGER
 	);`
 	budgetTable string = `
 	CREATE TABLE IF NOT EXISTS budgets(

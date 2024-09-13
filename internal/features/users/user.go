@@ -1,9 +1,5 @@
 package users
 
-import (
-	"database/sql"
-)
-
 type budgetPeriodEnum int
 
 const (
@@ -17,5 +13,4 @@ type User struct {
 	Email        string            `json:"email"`
 	Name         string            `json:"name"`
 	BudgetPeriod *budgetPeriodEnum `json:"budget_period"`
-	BudgetStart  sql.NullTime      `json:"budget_start"`
 }
