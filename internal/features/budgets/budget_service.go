@@ -13,12 +13,12 @@ func (s *BudgetService) CreateBudget(dto BudgetDto) (int64, error) {
 	res, err := s.Client.Exec("INSERT INTO budgets (userId, name, category, amount) VALUES (?, ?, ?, ?)",
 		dto.UserID, dto.Name, dto.Category, dto.Amount)
 	if err != nil {
-		return 0, fmt.Errorf("add budget: &v", err)
+		return 0, fmt.Errorf("add budget: %v", err)
 	}
 
 	id, err := res.LastInsertId()
 	if err != nil {
-		return 0, fmt.Errorf("add budget: &v", err)
+		return 0, fmt.Errorf("add budget: %v", err)
 	}
 
 	return id, nil
