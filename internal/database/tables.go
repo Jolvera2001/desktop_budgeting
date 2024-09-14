@@ -13,7 +13,6 @@ const(
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	userId INT NOT NULL,
 	category TEXT,
-	Date DATETIME,
 	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 	);`
 	transactionsTable string = `
