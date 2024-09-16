@@ -1,7 +1,6 @@
 package budgets
 
-type Budget struct {
-	ID       int64   `json:"_id"`
+type BudgetDto struct {
 	UserID   int64   `json:"user_id"`
 	Name     string  `json:"name"`
 	Category string  `json:"category"`

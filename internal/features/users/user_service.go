@@ -40,7 +40,7 @@ func (s *UserService) GetUsers() ([]User, error) {
 
 	rows, err := s.Client.Query("SELECT * FROM users")
 	if err != nil {
-		return []User{}, err
+		return []User{}, fmt.Errorf("error fetching users: %v", err)
 	}
 
 	defer rows.Close()

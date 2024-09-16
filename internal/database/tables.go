@@ -12,8 +12,9 @@ const(
 	CREATE TABLE IF NOT EXISTS budgets(
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	userId INT NOT NULL,
+	name TEXT,
 	category TEXT,
-	Date DATETIME,
+	amount INT,
 	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 	);`
 	transactionsTable string = `
