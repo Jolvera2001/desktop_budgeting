@@ -75,13 +75,54 @@ func TestGetbudgets(t *testing.T) {
 }
 
 func TestUpdatebudget(t *testing.T) {
-	// userId, err := setup()
-	// assert.Nil(t, err)
+	userId, err := setup()
+	assert.Nil(t, err, "process should not bring up an error")
+	budgetToDelete := BudgetDto{
+		UserID: userId,
+		Name: "DeleteME!",
+		Category: "Entertainment",
+		Amount: 10495.25,
+	}
+	service := BudgetService{Client: testDB.Db}
+	
+	id, err := service.CreateBudget(budgetToDelete)
+	assert.Nil(t, err, "process should not bring up an error")
+	budgetToChange, err := service.GetBudget(id)
+	assert.Nil(t, err, "process should not bring up an error")
+	update := budgetToChange
+	update.Name = "updated"
+	err = service.UpdateBudget(update)
+	assert.Nil(t, err, "process should not bring up an error")
+	updatedBudget, err := service.GetBudget(id)
+
+	assert.Nil(t, err, "process should not bring up an error")
+	assert.NotEqual(t, budgetToChange, updatedBudget)
+
+	tearDown(id, userId)
+
 }
 
 func TestDeletebudget(t *testing.T) {
-	// userId, err := setup()
-	// assert.Nil(t, err)
+	userId, err := setup()
+	assert.Nil(t, err, "process should not bring up an error")
+	budgetToDelete := BudgetDto{
+		UserID: userId,
+		Name: "DeleteME!",
+		Category: "Entertainment",
+		Amount: 10495.25,
+	}
+	service := BudgetService{Client: testDB.Db}
+
+	id, err := service.CreateBudget(budgetToDelete)
+	assert.Nil(t, err, "process should not bring up an error")
+	err = service.DeleteBudget(id)
+	assert.Nil(t, err, "process should not bring up an error")
+	actualBudget, err := service.GetBudget(id)
+
+	assert.NotNil(t, err, "there should be an error")
+	assert.Equal(t, Budget{}, actualBudget, "returned budget should be empty")
+
+	tearDown(0, userId)
 }
 
 
@@ -107,5 +148,5 @@ func tearDown(budgetId int64, userId int64) {
 		testDB.Db.Exec("DELETE FROM users WHERE id = ?", userId)
 	} 
 
-	testDB.Db.Close()
+	defer testDB.Db.Close()
 }

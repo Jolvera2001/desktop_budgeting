@@ -128,5 +128,5 @@ func tearDown(id int64) {
 		testDB.Db.Exec("DELETE FROM users WHERE id = ?", id)
 	}
 
-	testDB.Db.Close()
+	defer testDB.Db.Close()
 }
