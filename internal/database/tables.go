@@ -12,10 +12,11 @@ const(
 	CREATE TABLE IF NOT EXISTS budgets(
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	userId INT NOT NULL,
+	categoryId INT NOT NULL,
 	name TEXT,
-	category TEXT,
 	amount INT,
 	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+	FOREIGN KEY (categoryId) REFERENCES categories(id) ON DELETE CASCADE
 	);`
 	transactionsTable string = `
 	CREATE TABLE IF NOT EXISTS transactions(
