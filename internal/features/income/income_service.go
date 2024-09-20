@@ -28,7 +28,7 @@ func (s *IncomeService) GetIncome(id int64) (Income, error) {
 	var income Income
 	row := s.Client.QueryRow("SELECT * FROM income WHERE id = ?", id)
 
-	if err := row.Scan(&income.ID, &income.UserID, &income.Category, &income.Amount, &income.IsRegular, &income.Date); err != nil {
+	if err := row.Scan(&income.ID, &income.UserID, &income.CategoryID, &income.Amount, &income.IsRegular, &income.Date); err != nil {
 		return Income{}, fmt.Errorf("error fetching income: %v", err)
 	}
 
@@ -48,7 +48,7 @@ func (s *IncomeService) GetIncomeList(userId int64) ([]Income, error) {
 	for rows.Next() {
 		var income Income
 
-		if err := rows.Scan(&income.ID, &income.UserID, &income.Category, &income.Amount, &income.IsRegular, &income.Date); err != nil {
+		if err := rows.Scan(&income.ID, &income.UserID, &income.CategoryID, &income.Amount, &income.IsRegular, &income.Date); err != nil {
 			return nil, fmt.Errorf("error fetching income: %v", err)
 		}
 
@@ -68,7 +68,7 @@ func (s *IncomeService) UpdateIncome(update Income) error {
 	SET category = ?, amount = ?, isRegular = ?, date = ?
 	WHERE id = ?;`
 
-	_, err := s.Client.Exec(query, update.Category, update.Amount, update.IsRegular, update.Date, update.ID)
+	_, err := s.Client.Exec(query, update.CategoryID, update.Amount, update.IsRegular, update.Date, update.ID)
 	if err != nil {
 		return fmt.Errorf("error updating income: %v", err)
 	}
