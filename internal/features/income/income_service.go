@@ -29,7 +29,7 @@ func (s *IncomeService) GetIncome(id int64) (Income, error) {
 	row := s.Client.QueryRow("SELECT * FROM income WHERE id = ?", id)
 
 	if err := row.Scan(&income.ID, &income.UserID, &income.Category, &income.Amount, &income.IsRegular, &income.Date); err != nil {
-		return Income{}, fmt.Errorf("Error fetching income: %v", err)
+		return Income{}, fmt.Errorf("error fetching income: %v", err)
 	}
 
 	return income, nil
@@ -49,7 +49,7 @@ func (s *IncomeService) GetIncomeList(userId int64) ([]Income, error) {
 		var income Income
 
 		if err := rows.Scan(&income.ID, &income.UserID, &income.Category, &income.Amount, &income.IsRegular, &income.Date); err != nil {
-			return nil, fmt.Errorf("Error fetching income: %v", err)
+			return nil, fmt.Errorf("error fetching income: %v", err)
 		}
 
 		incomeList = append(incomeList, income)
