@@ -10,7 +10,7 @@ type BudgetService struct {
 }
 
 func (s *BudgetService) CreateBudget(dto BudgetDto) (int64, error) {
-	res, err := s.Client.Exec("INSERT INTO budgets (userId, name, category, amount) VALUES (?, ?, ?, ?)",
+	res, err := s.Client.Exec("INSERT INTO budgets (userId, categoryId, name, amount) VALUES (?, ?, ?, ?)",
 		dto.UserID, dto.CategoryID, dto.Name, dto.Amount)
 	if err != nil {
 		return 0, fmt.Errorf("add budget: %v", err)
@@ -63,7 +63,7 @@ func (s *BudgetService) GetBudgets(userId int64) ([]Budget, error) {
 }
 
 func (s *BudgetService) UpdateBudget(update Budget) error {
-	_, err := s.Client.Exec("UPDATE budgets SET name = ?, category = ?, amount = ? WHERE id = ?;", 
+	_, err := s.Client.Exec("UPDATE budgets SET categoryId = ?, name = ?, amount = ? WHERE id = ?;", 
 	update.CategoryID, update.Name, update.Amount, update.ID)
 	if err != nil {
 		return fmt.Errorf("error updating budget: %v", err)

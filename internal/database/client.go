@@ -48,7 +48,7 @@ func (c *SqliteClient) SetUpDB() error {
 		return fmt.Errorf("db connection not set up")
 	}
 
-	sqlScript := userTable + budgetTable + transactionsTable
+	sqlScript := userTable + categoryTable + incomeTable + budgetTable + transactionsTable 
 
 	_, err := c.Db.Exec(sqlScript)
 	if err != nil {

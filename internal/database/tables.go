@@ -16,7 +16,7 @@ const (
 	categoryId INT NOT NULL,
 	name TEXT,
 	amount REAL,
-	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
 	FOREIGN KEY (categoryId) REFERENCES categories(id) ON DELETE CASCADE
 	);`
 
@@ -29,7 +29,7 @@ const (
 	amount REAL,
 	category TEXT,
 	date DATETIME,
-	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
 	FOREIGN KEY (budgetId) REFERENCES budgets(id) ON DELETE CASCADE
 	);`
 
@@ -41,9 +41,10 @@ const (
 	amount REAL,
 	isRegular INT,
 	date TEXT,
-	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-	FOREIGN KEY (budgetId) REFERENCES budgets(id) ON DELETE CASCADE
+	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (categoryId) REFERENCES categories(id) ON DELETE CASCADE
 	);`
+
 	categoryTable string = `
 	CREATE TABLE IF NOT EXISTS categories(
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

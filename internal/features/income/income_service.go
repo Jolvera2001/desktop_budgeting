@@ -10,8 +10,8 @@ type IncomeService struct {
 }
 
 func (s *IncomeService) CreateIncome(dto IncomeDto) (int64, error) {
-	res, err := s.Client.Exec("INSERT INTO income (userId, category, amount, isRegular, date) VALUES (?, ?, ?, ?, ?)",
-		dto.UserID, dto.Category, dto.Amount, dto.IsRegular, dto.Date)
+	res, err := s.Client.Exec("INSERT INTO income (userId, categoryId, amount, isRegular, date) VALUES (?, ?, ?, ?, ?)",
+		dto.UserID, dto.CategoryID, dto.Amount, dto.IsRegular, dto.Date)
 	if err != nil {
 		return 0, fmt.Errorf("add income: %v", err)
 	}

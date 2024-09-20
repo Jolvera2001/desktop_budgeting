@@ -129,17 +129,20 @@ func setup() (int64, int64, error) {
 	testDB.ConnectToDB()
 	testDB.SetUpDB()
 
+	defer testDB.SetUpDB()
+
 	res, err := testDB.Db.Exec("INSERT INTO users (email, name, budgetPeriod) VALUES (?, ?, ?)",
 		"something@test.com", "BudgetuserTest", 1)
 	if err != nil {
 		return 0, 0, err
 	}
-
-	userId, err := res.LastInsertId()
+	userId, _ := res.LastInsertId()
 
 	res2, err := testDB.Db.Exec("INSERT INTO categories (userId, name) VALUES (?, ?)",
 		userId, "testCategory")
-
+	if err != nil {
+		return 0, 0, err
+	}
 	categoryId, err := res2.LastInsertId()
 
 	return userId, categoryId, err
