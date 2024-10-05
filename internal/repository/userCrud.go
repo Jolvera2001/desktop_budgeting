@@ -18,43 +18,43 @@ type UserCrud struct {
 	repo *gorm.DB
 }
 
-func (this *UserCrud) Create(user *models.User) (uint, error) {
-	res := this.repo.Create(user)
+func (c *UserCrud) Create(user *models.User) (uint, error) {
+	res := c.repo.Create(user)
 	if res.Error != nil {
 		return 0, res.Error
 	}
 	return user.ID, nil
 }
 
-func (this *UserCrud) Get(id uint) (*models.User, error) {
+func (c *UserCrud) Get(id uint) (*models.User, error) {
 	var user models.User
-	res := this.repo.First(&user, id)
+	res := c.repo.First(&user, id)
 	if res.Error != nil {
 		return &models.User{}, res.Error
 	}
 	return &user, nil
 }
 
-func (this *UserCrud) GetMany() ([]models.User, error) {
+func (c *UserCrud) GetMany() ([]models.User, error) {
 	var users []models.User
-	res := this.repo.First(&users)
+	res := c.repo.First(&users)
 	if res != nil {
 		return []models.User{}, res.Error
 	}
 	return users, nil
 }
 
-func (this *UserCrud) Update(user *models.User) error {
+func (c *UserCrud) Update(user *models.User) error {
 	// assumes user contains ID
-	res := this.repo.Save(user)
+	res := c.repo.Save(user)
 	if res != nil {
 		return res.Error
 	}
 	return nil
 }
 
-func (this *UserCrud) Delete(id uint) error {
-	res := this.repo.Delete(&models.User{}, id)
+func (c *UserCrud) Delete(id uint) error {
+	res := c.repo.Delete(&models.User{}, id)
 	if res != nil {
 		return res.Error
 	}
