@@ -1,12 +1,14 @@
 package income
 
-import "database/sql"
+import (
+	"time"
+)
 
 type Income struct {
-	ID        int          `json:"_id"`
-	UserID    int          `json:"user_id"`
-	Category  string       `json:"category"`
-	Amount    float64      `json:"amount"`
-	IsRegular bool         `json:"is_regular"`
-	Date      sql.NullTime `json:"date"`
+	ID         int64     `json:"_id"`
+	UserID     int64     `json:"user_id"`
+	CategoryID int64     `json:"category"`
+	Amount     float64   `json:"amount"`
+	IsRegular  bool      `json:"is_regular"`
+	Date       time.Time `json:"date"`
 }

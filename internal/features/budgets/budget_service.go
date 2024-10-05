@@ -10,8 +10,8 @@ type BudgetService struct {
 }
 
 func (s *BudgetService) CreateBudget(dto BudgetDto) (int64, error) {
-	res, err := s.Client.Exec("INSERT INTO budgets (userId, name, category, amount) VALUES (?, ?, ?, ?)",
-		dto.UserID, dto.Name, dto.Category, dto.Amount)
+	res, err := s.Client.Exec("INSERT INTO budgets (userId, categoryId, name, amount) VALUES (?, ?, ?, ?)",
+		dto.UserID, dto.CategoryID, dto.Name, dto.Amount)
 	if err != nil {
 		return 0, fmt.Errorf("add budget: %v", err)
 	}
@@ -28,7 +28,7 @@ func (s *BudgetService) GetBudget(id int64) (Budget, error) {
 	var budget Budget
 	row := s.Client.QueryRow("SELECT * FROM budgets WHERE id = ?", id)
 
-	if err := row.Scan(&budget.ID, &budget.UserID, &budget.Name, &budget.Category, &budget.Amount); err != nil {
+	if err := row.Scan(&budget.ID, &budget.UserID, &budget.CategoryID, &budget.Name, &budget.Amount); err != nil {
 		return Budget{}, fmt.Errorf("error fetching budget: %v", err)
 	}
 
@@ -48,7 +48,7 @@ func (s *BudgetService) GetBudgets(userId int64) ([]Budget, error) {
 	for rows.Next() {
 		var budget Budget
 
-		if err := rows.Scan(&budget.ID, &budget.UserID, &budget.Name, &budget.Category, &budget.Amount); err != nil {
+		if err := rows.Scan(&budget.ID, &budget.UserID, &budget.CategoryID, &budget.Name, &budget.Amount); err != nil {
 			return nil, fmt.Errorf("error fetching budgets: %v", err)
 		}
 
@@ -63,8 +63,8 @@ func (s *BudgetService) GetBudgets(userId int64) ([]Budget, error) {
 }
 
 func (s *BudgetService) UpdateBudget(update Budget) error {
-	_, err := s.Client.Exec("UPDATE budgets SET name = ?, category = ?, amount = ? WHERE id = ?;", 
-	update.Name, update.Category, update.Amount, update.ID)
+	_, err := s.Client.Exec("UPDATE budgets SET categoryId = ?, name = ?, amount = ? WHERE id = ?;", 
+	update.CategoryID, update.Name, update.Amount, update.ID)
 	if err != nil {
 		return fmt.Errorf("error updating budget: %v", err)
 	}
