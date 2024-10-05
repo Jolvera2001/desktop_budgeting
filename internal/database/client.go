@@ -1,18 +1,19 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
 	"path/filepath"
 
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 	_ "modernc.org/sqlite"
 )
 
 const file string = "dev.sqlite"
 
 type SqliteClient struct {
-	Db *sql.DB
+	Db *gorm.DB
 }
 
 func (c *SqliteClient) ConnectToDB() error {
@@ -29,12 +30,7 @@ func (c *SqliteClient) ConnectToDB() error {
 
 	dbFilePath := filepath.Join(appFolderPath, file)
 
-	db, err := sql.Open("sqlite", dbFilePath)
-	if err != nil {
-		return err
-	}
-
-	err = db.Ping()
+	db, err := gorm.Open(sqlite.Open(dbFilePath))
 	if err != nil {
 		return err
 	}
@@ -43,17 +39,17 @@ func (c *SqliteClient) ConnectToDB() error {
 	return nil
 }
 
-func (c *SqliteClient) SetUpDB() error {
-	if c.Db == nil {
-		return fmt.Errorf("db connection not set up")
-	}
+// func (c *SqliteClient) SetUpDB() error {
+// 	if c.Db == nil {
+// 		return fmt.Errorf("db connection not set up")
+// 	}
 
-	sqlScript := userTable + categoryTable + incomeTable + budgetTable + transactionsTable 
+// 	sqlScript := userTable + categoryTable + incomeTable + budgetTable + transactionsTable 
 
-	_, err := c.Db.Exec(sqlScript)
-	if err != nil {
-		return err
-	}
+// 	_, err := c.Db.Exec(sqlScript)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
