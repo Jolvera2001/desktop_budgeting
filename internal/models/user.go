@@ -9,7 +9,7 @@ const (
 )
 
 type User struct {
-	ID           int64             `json:"_id"`
+	ID           uint             `json:"_id" gorm:"primaryKey"`
 	Email        string            `json:"email"`
 	Name         string            `json:"name"`
 	BudgetPeriod *budgetPeriodEnum `json:"budget_period"`
