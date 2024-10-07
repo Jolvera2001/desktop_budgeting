@@ -19,7 +19,7 @@ type UserCrud struct {
 }
 
 func (c *UserCrud) Create(user *models.User) (uint, error) {
-	res := c.repo.Create(user)
+	res := c.repo.Preload("Transactions").Preload("Categories").Create(user)
 	if res.Error != nil {
 		return 0, res.Error
 	}

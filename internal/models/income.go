@@ -12,5 +12,5 @@ type Income struct {
 	CategoryID uint      `json:"category"`
 	Amount     float64   `json:"amount"`
 	IsRegular  bool      `json:"is_regular"`
-	Date       time.Time `json:"date"`
+	Date       time.Time `json:"date" gorm:"index"`
 }
