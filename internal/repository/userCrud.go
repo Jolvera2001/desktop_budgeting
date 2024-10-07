@@ -47,7 +47,7 @@ func (c *UserCrud) GetMany() ([]models.User, error) {
 func (c *UserCrud) Update(user *models.User) error {
 	// assumes user contains ID
 	res := c.repo.Save(user)
-	if res != nil {
+	if res.Error != nil {
 		return res.Error
 	}
 	return nil
@@ -55,7 +55,7 @@ func (c *UserCrud) Update(user *models.User) error {
 
 func (c *UserCrud) Delete(id uint) error {
 	res := c.repo.Delete(&models.User{}, id)
-	if res != nil {
+	if res.Error != nil {
 		return res.Error
 	}
 	return nil
