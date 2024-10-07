@@ -2,6 +2,7 @@ package models
 
 type Category struct {
 	Base
-	UserID    uint      `json:"userId"`
-	Name      string    `json:"category"`
+	User   User   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	UserID uint   `json:"userId"`
+	Name   string `json:"category"`
 }

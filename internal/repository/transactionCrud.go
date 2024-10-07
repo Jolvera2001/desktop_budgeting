@@ -9,6 +9,7 @@ import (
 type TransactionCrudInterface interface {
 	Create(transaction *models.Transaction) (uint, error)
 	Get(id uint) (*models.Transaction, error)
+	GetMany(userId uint) ([]models.Transaction, error)
 	Update(transaction *models.Transaction) error
 	Delete(id uint) error
 }
@@ -32,6 +33,10 @@ func (c *TransactionCrud) Get(id uint) (*models.Transaction, error) {
 		return &models.Transaction{}, res.Error
 	}
 	return &transaction, nil
+}
+
+func (c *TransactionCrud) GetMany(userId uint) ([]models.Transaction, error) {
+	
 }
 
 func (c *TransactionCrud) Update(transaction *models.Transaction) error {
