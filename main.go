@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"log"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -24,7 +25,11 @@ func main() {
 		panic("issue establishing local db")
 	}
 
-	repo.AutoMigrate(&m.User{}, &m.Budget{}, &m.Category{}, &m.Income{}, &m.Transaction{})
+	err = repo.AutoMigrate(&m.User{}, &m.Budget{}, &m.Category{}, &m.Income{}, &m.Transaction{})
+	if err != nil {
+		log.Fatalf("failed to perform migrations: %v", err)
+	}
+	log.Println("migrations complete!")
 
 	// creating crud services
 	
