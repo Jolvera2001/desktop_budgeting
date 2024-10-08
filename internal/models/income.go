@@ -2,10 +2,12 @@ package models
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Income struct {
-	Base
+	gorm.Model
 	User       User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Category   Category  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	UserID     uint      `json:"user_id"`
