@@ -12,44 +12,25 @@ import (
 
 const file string = "dev.sqlite"
 
-type SqliteClient struct {
-	Db *gorm.DB
-}
-
-func (c *SqliteClient) ConnectToDB() error {
+func ConnectToDB() (*gorm.DB, error) {
 	appDataPath := os.Getenv("APPDATA")
 	if appDataPath == "" {
-		return fmt.Errorf("unable to find appdata path")
+		return nil, fmt.Errorf("unable to find appdata path")
 	}
 
 	appFolderPath := filepath.Join(appDataPath, "Desktop_Budgeting")
 	err := os.MkdirAll(appFolderPath, os.ModePerm)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	dbFilePath := filepath.Join(appFolderPath, file)
 
 	db, err := gorm.Open(sqlite.Open(dbFilePath))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	c.Db = db
-	return nil
+	return db, nil
 }
 
-// func (c *SqliteClient) SetUpDB() error {
-// 	if c.Db == nil {
-// 		return fmt.Errorf("db connection not set up")
-// 	}
-
-// 	sqlScript := userTable + categoryTable + incomeTable + budgetTable + transactionsTable 
-
-// 	_, err := c.Db.Exec(sqlScript)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
