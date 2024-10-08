@@ -19,7 +19,7 @@ type UserCrud struct {
 }
 
 func (c *UserCrud) Create(user *models.User) (uint, error) {
-	res := c.repo.Preload("Transactions").Preload("Categories").Create(user)
+	res := c.repo.Create(user)
 	if res.Error != nil {
 		return 0, res.Error
 	}
@@ -28,7 +28,7 @@ func (c *UserCrud) Create(user *models.User) (uint, error) {
 
 func (c *UserCrud) Get(id uint) (*models.User, error) {
 	var user models.User
-	res := c.repo.First(&user, id)
+	res := c.repo.Preload("Transactions").Preload("Categories").First(&user, id)
 	if res.Error != nil {
 		return &models.User{}, res.Error
 	}
@@ -37,7 +37,7 @@ func (c *UserCrud) Get(id uint) (*models.User, error) {
 
 func (c *UserCrud) GetMany() ([]models.User, error) {
 	var users []models.User
-	res := c.repo.First(&users)
+	res := c.repo.Find(&users)
 	if res != nil {
 		return []models.User{}, res.Error
 	}
