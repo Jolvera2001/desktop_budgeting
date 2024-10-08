@@ -23,6 +23,7 @@ func main() {
 	if err != nil {
 		panic("issue establishing local db")
 	}
+	
 	repo.AutoMigrate(&m.User{}, &m.Budget{}, &m.Category{}, &m.Income{}, &m.Transaction{})
 
 	// creating crud services

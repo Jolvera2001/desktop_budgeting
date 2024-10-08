@@ -5,9 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
-	_ "modernc.org/sqlite"
 )
 
 const file string = "dev.sqlite"
@@ -33,4 +32,3 @@ func ConnectToDB() (*gorm.DB, error) {
 
 	return db, nil
 }
-
