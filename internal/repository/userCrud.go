@@ -9,7 +9,7 @@ import (
 type UserCrudInterface interface {
 	Create(user *models.User) (uint, error)
 	Get(id uint) (*models.User, error)
-	GetMany() ([]models.User, error)
+	GetMany() ([]*models.User, error)
 	Update(user *models.User) error // must contain Id for specific row to update
 	Delete(id uint) error
 }
@@ -35,11 +35,11 @@ func (c *UserCrud) Get(id uint) (*models.User, error) {
 	return &user, nil
 }
 
-func (c *UserCrud) GetMany() ([]models.User, error) {
-	var users []models.User
+func (c *UserCrud) GetMany() ([]*models.User, error) {
+	var users []*models.User
 	res := c.repo.Find(&users)
 	if res != nil {
-		return []models.User{}, res.Error
+		return []*models.User{}, res.Error
 	}
 	return users, nil
 }
