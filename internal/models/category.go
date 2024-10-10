@@ -3,6 +3,6 @@ package models
 import "gorm.io/gorm"
 
 type Category struct {
-	gorm.Model
-	Name   string `json:"category"`
+	gorm.Model `json:",inline"`
+	Name       string `json:"category"`
 }

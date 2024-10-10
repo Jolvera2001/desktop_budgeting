@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { users } from "../../wailsjs/go/models"
+import { models } from "../../wailsjs/go/models"
 import { Button } from "@/components/ui/button"
 import { Input } from '@/components/ui/input';
 import useUserStore from '@/store/UserStore'
@@ -8,12 +8,12 @@ import { Label } from '@/components/ui/label'
 import { House, Key, Plus, Trash } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
-    CreateUser,
-    UpdateUser,
-    GetUser,
-    GetUsers,
-    DeleteUser
-} from "../../wailsjs/go/users/UserService"
+    Register,
+    Login,
+    GetAllProfiles,
+    UpdateProfile,
+    DeleteProfile
+} from "../../wailsjs/go/services/UserService"
 import { mapNumToBudget, mapBudgetToNum } from '@/lib/mapBudgetPeriod';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
@@ -21,10 +21,10 @@ function UserSelection() {
     const navigate = useNavigate(); // use to go to other pages
 
     const { selectedUser, setUser } = useUserStore();
-    const [userList, setUserList] = useState<users.User[] | null>(null);
+    const [userList, setUserList] = useState<models.User[] | null>(null);
     const [newUser, setNewUser] = useState({name: "", email: "", budgetPeriod: ""});
-    const updateUserList = (result: users.User[]) => setUserList(result);
-    const getUsers = () => GetUsers().then(updateUserList);
+    const updateUserList = (result: models.User[]) => setUserList(result);
+    const getUsers = () => GetAllProfiles().then(updateUserList);
 
     const handleLogin = () => {
         if (selectedUser) {
@@ -41,7 +41,7 @@ function UserSelection() {
     const handleDelete = async () => {
         if (selectedUser?._id) {
             try {
-                await DeleteUser(selectedUser?._id);
+                await DeleteProfile(selectedUser?._id);
                 await getUsers();
                 setUser(null);
             } catch (error) {
@@ -52,7 +52,7 @@ function UserSelection() {
         }
     }
 
-    const handleSelectUser = (user: users.User) => {
+    const handleSelectUser = (user: models.User) => {
         setUser(user)
     }
 
@@ -61,15 +61,14 @@ function UserSelection() {
         if (newUser.name && newUser.email && newUser.budgetPeriod) {
             console.log("called handleAddUser")
             const date = new Date()
-            const newUserDto = new users.UserDto();
+            const newUserDto = new models.UserDto();
 
             newUserDto.name = newUser.name;
             newUserDto.email = newUser.email;
-            newUserDto.budget_period = mapBudgetToNum(newUser.budgetPeriod);
 
             try {
                 console.log("Creating user...")
-                await CreateUser(newUserDto);
+                await Register(newUserDto);
                 await getUsers();
 
                 setNewUser({ name: "", email: "", budgetPeriod: "" })

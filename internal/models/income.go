@@ -15,7 +15,7 @@ const (
 )
 
 type Income struct {
-	gorm.Model
+	gorm.Model `json:",inline"`
 	User       User       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	UserID     uint       `json:"user_id"`
 	Amount     float64    `json:"amount"`

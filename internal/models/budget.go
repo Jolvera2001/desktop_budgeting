@@ -3,7 +3,7 @@ package models
 import "gorm.io/gorm"
 
 type Budget struct {
-	gorm.Model
+	gorm.Model   `json:",inline"`
 	User         User          `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Category     Category      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	UserID       uint          `json:"user_id"`
