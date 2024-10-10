@@ -3,9 +3,12 @@ package services
 import (
 	m "desktop_budgeting/internal/models"
 	r "desktop_budgeting/internal/repository"
+	"errors"
 	"fmt"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UserService struct {
@@ -13,7 +16,7 @@ type UserService struct {
 }
 
 func (s *UserService) Register(dto m.UserDto) (*m.User, error) {
-	hashedPass, err := HashPassword(dto.Password)
+	hashedPass, err := hashPassword(dto.Password)
 	if err != nil {
 		return &m.User{}, err
 	}
@@ -38,7 +41,7 @@ func (s *UserService) Login(id uint, password, hash string) (*m.User, error) {
 		return &m.User{}, fmt.Errorf("no values present")
 	}
 
-	check := CheckHash(password, hash)
+	check := checkHash(password, hash)
 	if !check {
 		return &m.User{}, fmt.Errorf("password does not match")
 	}
@@ -60,7 +63,36 @@ func (s *UserService) GetAllProfiles() ([]*m.User, error) {
 }
 
 func (s *UserService) UpdateProfile(id uint, dto m.UserDto) error {
-	updatedUser := m.User{}
+	user, err := s.crud.Get(id) 
+	if err != nil {
+		return fmt.Errorf("failed to fetch user: %w", err)
+	}
+
+	if dto.Name != "" {
+		user.Name = dto.Name
+	}
+	if dto.Email != "" {
+		user.Email = dto.Email
+	}
+	if dto.Password != "" {
+		hashedPass, err := hashPassword(dto.Password)
+		if err != nil {
+			return fmt.Errorf("failed to hash password: %w", err)
+		}
+		user.Password = hashedPass
+	}
+
+	// Perform basic validation
+    if err := validateUserFields(*user); err != nil {
+        return fmt.Errorf("validation failed: %w", err)
+    }
+
+    // Update the user
+    if err := s.crud.Update(user); err != nil {
+        return fmt.Errorf("failed to update user: %w", err)
+    }
+
+    return nil
 }
 
 func (s *UserService) DeleteProfile(id uint) error {
@@ -68,12 +100,29 @@ func (s *UserService) DeleteProfile(id uint) error {
 	return err
 }
 
-func HashPassword(password string) (string, error) {
+//  HELPER METHODS **********************************
+
+func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
 }
 
-func CheckHash(password, hash string) bool {
+func checkHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func validateUserFields(user m.User) error {
+    if user.Name == "" {
+        return errors.New("name cannot be empty")
+    }
+    if !isValidEmail(user.Email) {
+        return errors.New("invalid email format")
+    }
+    // Add more validation as needed
+    return nil
+}
+
+func isValidEmail(email string) bool {
+	return strings.Contains(email, "@")
 }
