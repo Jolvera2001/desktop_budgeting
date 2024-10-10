@@ -1,9 +1,9 @@
-import { users } from 'wailsjs/go/models';
+import { models } from 'wailsjs/go/models';
 import { create } from 'zustand';
 
 interface UserState {
-    selectedUser: users.User | null;
-    setUser: (user: users.User | null) => void;
+    selectedUser: models.User | null;
+    setUser: (user: models.User | null) => void;
 }
 
 const useUserStore = create<UserState>()((set) => ({

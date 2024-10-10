@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { users } from "../../wailsjs/go/models"
+import { models } from "../../wailsjs/go/models"
 import { Button } from "@/components/ui/button"
 import { Input } from '@/components/ui/input';
 import useUserStore from '@/store/UserStore'
@@ -8,27 +8,43 @@ import { Label } from '@/components/ui/label'
 import { House, Key, Plus, Trash } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
-    CreateUser,
-    UpdateUser,
-    GetUser,
-    GetUsers,
-    DeleteUser
-} from "../../wailsjs/go/users/UserService"
+    Register,
+    Login,
+    GetAllProfiles,
+    UpdateProfile,
+    DeleteProfile
+} from "../../wailsjs/go/services/UserService"
 import { mapNumToBudget, mapBudgetToNum } from '@/lib/mapBudgetPeriod';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 function UserSelection() {
-    const navigate = useNavigate(); // use to go to other pages
+    // use to go to other pages
+    const navigate = useNavigate(); 
 
-    const { selectedUser, setUser } = useUserStore();
-    const [userList, setUserList] = useState<users.User[] | null>(null);
-    const [newUser, setNewUser] = useState({name: "", email: "", budgetPeriod: ""});
-    const updateUserList = (result: users.User[]) => setUserList(result);
-    const getUsers = () => GetUsers().then(updateUserList);
+    // user store operations
+    const { selectedUser, setUser } = useUserStore(); 
 
-    const handleLogin = () => {
+    // react state
+    const [userList, setUserList] = useState<models.User[]>([]);
+    const [newUser, setNewUser] = useState({name: "", email: "", password: ""});
+    const [loginPassword, setLoginPassword] = useState("");
+
+    const updateUserList = (result: models.User[]) => {
+        console.log(result)
+        if (Array.isArray(result)) {
+            setUserList(result)
+        } else {
+            console.error("Expected an array of users, but received:", result);
+            setUserList([]); // Fallback to an empty array if the result is invalid
+        }
+    };
+    const getUsers = () => GetAllProfiles().then(updateUserList);
+
+    const handleLogin = async () => {
         if (selectedUser) {
             try {
+                const loggedInUser = await Login(selectedUser.id, loginPassword, selectedUser.password)
+                setUser(loggedInUser)
                 navigate("/home")
             } catch (error) {
                 console.log(error)
@@ -39,9 +55,9 @@ function UserSelection() {
     }
 
     const handleDelete = async () => {
-        if (selectedUser?._id) {
+        if (selectedUser?.id) {
             try {
-                await DeleteUser(selectedUser?._id);
+                await DeleteProfile(selectedUser?.id);
                 await getUsers();
                 setUser(null);
             } catch (error) {
@@ -52,27 +68,27 @@ function UserSelection() {
         }
     }
 
-    const handleSelectUser = (user: users.User) => {
+    const handleSelectUser = (user: models.User) => {
         setUser(user)
     }
 
     const handleAddUser = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (newUser.name && newUser.email && newUser.budgetPeriod) {
+        if (newUser.name && newUser.email && newUser.password) {
             console.log("called handleAddUser")
             const date = new Date()
-            const newUserDto = new users.UserDto();
+            const newUserDto = new models.UserDto();
 
             newUserDto.name = newUser.name;
             newUserDto.email = newUser.email;
-            newUserDto.budget_period = mapBudgetToNum(newUser.budgetPeriod);
+            newUserDto.password = newUser.password
 
             try {
                 console.log("Creating user...")
-                await CreateUser(newUserDto);
+                await Register(newUserDto);
                 await getUsers();
 
-                setNewUser({ name: "", email: "", budgetPeriod: "" })
+                setNewUser({ name: "", email: "", password: "" })
             } catch (error) {
                 console.log(error);
             }
@@ -94,15 +110,14 @@ function UserSelection() {
                     <ScrollArea className="flex-1 border rounded-md bg-white">
                         {userList ? userList?.map((user) => (
                             <div 
-                                key={user._id}
-                                className={`p-4 cursor-pointer hover:bg-gray-100 ${selectedUser?._id === user._id ? "bg-blue-100" : ""}`}
+                                key={user.id}
+                                className={`p-4 cursor-pointer hover:bg-gray-100 ${selectedUser?.id === user.id ? "bg-blue-100" : ""}`}
                                 onClick={() => handleSelectUser(user)}
                             >
                                 <div className='flex items-center'>
                                     <div>
                                         <p>{user.name}</p>
                                         <p>{user.email}</p>
-                                        <p>Budget Period: {mapNumToBudget(user.budget_period)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -133,27 +148,13 @@ function UserSelection() {
                             />
                         </div>
                         <div>
-                            <Label htmlFor='budgetPeriod'>Budget Period</Label>
-                            <RadioGroup 
-                                id='budgetPeriod' 
-                                value={newUser.budgetPeriod}
-                                onValueChange={(value) => setNewUser({ ...newUser, budgetPeriod: value })}
-                            >
-                                <div className='flex flex-row space-x-4'>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="Monthly" id="r1" />
-                                        <Label htmlFor="r1">Monthly</Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="Biweekly" id="r2" />
-                                        <Label htmlFor="r2">Biweekly</Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="Weekly" id="r3" />
-                                        <Label htmlFor="r3">Weekly</Label>
-                                    </div>
-                                </div>
-                            </RadioGroup>
+                            <Label htmlFor='password'>Password</Label>
+                            <Input 
+                                id='password'
+                                value={newUser.password}
+                                type='password'
+                                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                            />
                         </div>
                         <Button type='submit'><Plus />Add User</Button>
                     </form>
@@ -162,6 +163,15 @@ function UserSelection() {
                             <h3 className="text-xl font-semibold mb-2">Selected User</h3>
                             <p>Name: {selectedUser.name}</p>
                             <p>Email: {selectedUser.email}</p>
+                            <div> 
+                                <Label htmlFor="loginPassword">Login</Label>
+                                <Input
+                                    id='loginPassword'
+                                    value={loginPassword}
+                                    type='password'
+                                    onChange={(e) => setLoginPassword(e.target.value)} 
+                                />
+                            </div>
                             <div className='flex flex-row gap-5 mt-4'>
                                 <Button className='gap-1 bg-green-700' onClick={handleLogin}><House />Login</Button>
                                 <Button className='gap-1 bg-red-800' onClick={handleDelete}><Trash />Delete</Button>

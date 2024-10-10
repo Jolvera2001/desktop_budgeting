@@ -2,13 +2,15 @@ package main
 
 import (
 	"embed"
+	"log"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 
-	db "desktop_budgeting/internal/database"
-	"desktop_budgeting/internal/features/users"
+	m "desktop_budgeting/internal/models"
+	"desktop_budgeting/internal/repository"
+	"desktop_budgeting/internal/services"
 )
 
 //go:embed all:frontend/dist
@@ -18,15 +20,23 @@ func main() {
 	// Create an instance of the app structure
 	app := NewApp()
 
-	// establishing db
-	sqliteClient := &db.SqliteClient{}
-	err := sqliteClient.ConnectToDB()
+	// db setup
+	repo, err := repository.ConnectToDB()
 	if err != nil {
-		panic(err)
+		panic("issue establishing local db")
 	}
 
-	// passing on to other structs
-	userService := &users.UserService{Client: sqliteClient.Db}
+	err = repo.AutoMigrate(&m.User{}, &m.Budget{}, &m.Category{}, &m.Income{}, &m.Transaction{})
+	if err != nil {
+		log.Fatalf("failed to perform migrations: %v", err)
+	}
+	log.Println("migrations complete!")
+
+	// creating crud services
+	userRepo := repository.NewUserCrud(repo)
+
+	// creating services
+	userService := services.NewUserService(userRepo)
 
 	// Create application with options
 	err = wails.Run(&options.App{
