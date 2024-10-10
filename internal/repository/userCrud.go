@@ -32,7 +32,7 @@ func (c *UserCrud) Create(user *models.User) (uint, error) {
 
 func (c *UserCrud) Get(id uint) (*models.User, error) {
 	var user models.User
-	res := c.Repo.Preload("Transactions").Preload("Categories").First(&user, id)
+	res := c.Repo.Preload("Budgets").Preload("Budgets").First(&user, id)
 	if res.Error != nil {
 		return &models.User{}, res.Error
 	}
@@ -42,7 +42,7 @@ func (c *UserCrud) Get(id uint) (*models.User, error) {
 func (c *UserCrud) GetMany() ([]*models.User, error) {
 	var users []*models.User
 	res := c.Repo.Find(&users)
-	if res != nil {
+	if res.Error != nil {
 		return []*models.User{}, res.Error
 	}
 	return users, nil
