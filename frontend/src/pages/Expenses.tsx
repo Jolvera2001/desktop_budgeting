@@ -1,6 +1,8 @@
 function Expenses() {
     return (
-        <></>
+        <>
+            this is expenses
+        </>
     )
 }
 

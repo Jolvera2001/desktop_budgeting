@@ -1,6 +1,8 @@
 function Income() {
     return (
-        <></>
+        <>
+            this is income
+        </>
     )
 }
 
