@@ -94,14 +94,13 @@ function UserSelection() {
                         {userList ? userList?.map((user) => (
                             <div 
                                 key={user.id}
-                                className={`p-4 cursor-pointer hover:bg-gray-100 ${selectedUser?._id === user._id ? "bg-blue-100" : ""}`}
+                                className={`p-4 cursor-pointer hover:bg-gray-100 ${selectedUser?._id === user.id ? "bg-blue-100" : ""}`}
                                 onClick={() => handleSelectUser(user)}
                             >
                                 <div className='flex items-center'>
                                     <div>
                                         <p>{user.name}</p>
                                         <p>{user.email}</p>
-                                        <p>Budget Period: {mapNumToBudget(user.budget_period)}</p>
                                     </div>
                                 </div>
                             </div>
