@@ -10,6 +10,7 @@ import (
 
 	m "desktop_budgeting/internal/models"
 	"desktop_budgeting/internal/repository"
+	"desktop_budgeting/internal/services"
 )
 
 //go:embed all:frontend/dist
@@ -32,10 +33,10 @@ func main() {
 	log.Println("migrations complete!")
 
 	// creating crud services
-	
+	userRepo := repository.NewUserCrud(repo)
 
 	// creating services
-	
+	userService := services.NewUserService(userRepo)
 
 	// Create application with options
 	err = wails.Run(&options.App{
@@ -49,6 +50,7 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
+			userService,
 		},
 	})
 

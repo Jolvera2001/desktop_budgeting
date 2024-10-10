@@ -11,7 +11,14 @@ import (
 )
 
 type UserService struct {
-	crud r.UserCrudInterface
+	Crud r.UserCrudInterface
+}
+
+func NewUserService(crud r.UserCrudInterface) *UserService {
+	if crud == nil {
+		panic("crud interface cannot be nil")
+	}
+	return &UserService{Crud: crud}
 }
 
 func (s *UserService) Register(dto m.UserDto) (*m.User, error) {
@@ -26,7 +33,7 @@ func (s *UserService) Register(dto m.UserDto) (*m.User, error) {
 		Password: hashedPass,
 	}
 
-	_, err = s.crud.Create(&newUser)
+	_, err = s.Crud.Create(&newUser)
 	if err != nil {
 		return &m.User{}, err
 	}
@@ -45,7 +52,7 @@ func (s *UserService) Login(id uint, password, hash string) (*m.User, error) {
 		return &m.User{}, fmt.Errorf("password does not match")
 	}
 
-	user, err := s.crud.Get(id)
+	user, err := s.Crud.Get(id)
 	if err != nil {
 		return &m.User{}, err
 	}
@@ -53,7 +60,7 @@ func (s *UserService) Login(id uint, password, hash string) (*m.User, error) {
 }
 
 func (s *UserService) GetAllProfiles() ([]*m.User, error) {
-	users, err := s.crud.GetMany()
+	users, err := s.Crud.GetMany()
 	if err != nil {
 		return []*m.User{}, err
 	}
@@ -62,7 +69,7 @@ func (s *UserService) GetAllProfiles() ([]*m.User, error) {
 }
 
 func (s *UserService) UpdateProfile(id uint, dto m.UserDto) error {
-	user, err := s.crud.Get(id)
+	user, err := s.Crud.Get(id)
 	if err != nil {
 		return fmt.Errorf("failed to fetch user: %w", err)
 	}
@@ -87,7 +94,7 @@ func (s *UserService) UpdateProfile(id uint, dto m.UserDto) error {
 	}
 
 	// Update the user
-	if err := s.crud.Update(user); err != nil {
+	if err := s.Crud.Update(user); err != nil {
 		return fmt.Errorf("failed to update user: %w", err)
 	}
 
@@ -95,7 +102,7 @@ func (s *UserService) UpdateProfile(id uint, dto m.UserDto) error {
 }
 
 func (s *UserService) DeleteProfile(id uint) error {
-	err := s.crud.Delete(id)
+	err := s.Crud.Delete(id)
 	return err
 }
 
