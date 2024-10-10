@@ -93,7 +93,7 @@ function UserSelection() {
                     <ScrollArea className="flex-1 border rounded-md bg-white">
                         {userList ? userList?.map((user) => (
                             <div 
-                                key={user._id}
+                                key={user.id}
                                 className={`p-4 cursor-pointer hover:bg-gray-100 ${selectedUser?._id === user._id ? "bg-blue-100" : ""}`}
                                 onClick={() => handleSelectUser(user)}
                             >

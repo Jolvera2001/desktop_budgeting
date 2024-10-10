@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type IncomeType string
@@ -15,7 +13,7 @@ const (
 )
 
 type Income struct {
-	gorm.Model `json:",inline"`
+	BaseModel
 	User       User       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	UserID     uint       `json:"user_id"`
 	Amount     float64    `json:"amount"`
