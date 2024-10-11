@@ -1,7 +1,11 @@
+import useUserStore from '@/store/UserStore'
+
 function Expenses() {
     return (
         <>
-            this is expenses
+            <div className="p-8">
+                <span>This is expenses</span>
+            </div>
         </>
     )
 }

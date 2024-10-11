@@ -52,7 +52,7 @@ function MainLayout() {
                 </div>
                 <div className="col-span-1 bg-gray-200 border-b-slate-300">
                     <Tabs value={getCurrentTab()} onValueChange={handleTabChange} orientation="vertical" className="w-full">
-                        <TabsList className="flex flex-col h-full space-y-2 bg-gray-100 p-2">
+                        <TabsList className="flex flex-col h-full space-y-3 bg-gray-200 p-2">
                             <TabsTrigger value="home" className="w-full flex items-center justify-start gap-2 responsive-tab">
                                 <Home size={16} />
                                 <span className="tab-text">Home</span>

@@ -1,7 +1,11 @@
+import useUserStore from '@/store/UserStore'
+
 function Home() {
     return (
         <>
-            this is Home
+            <div className="p-8">
+                this is Home
+            </div>
         </>
     )
 }

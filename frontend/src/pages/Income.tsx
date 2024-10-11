@@ -1,3 +1,5 @@
+import useUserStore from '@/store/UserStore'
+
 function Income() {
     return (
         <>
