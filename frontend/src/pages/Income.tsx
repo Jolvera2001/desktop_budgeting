@@ -3,7 +3,9 @@ import useUserStore from '@/store/UserStore'
 function Income() {
     return (
         <>
-            this is income
+            <div className="container mx-auto p-4 mt-4">
+                this is income
+            </div>
         </>
     )
 }

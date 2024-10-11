@@ -3,7 +3,7 @@ import useUserStore from '@/store/UserStore'
 function Home() {
     return (
         <>
-            <div className="p-8">
+            <div className="container mx-auto p-4 mt-4">
                 this is Home
             </div>
         </>
