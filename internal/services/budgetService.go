@@ -10,6 +10,13 @@ type BudgetService struct {
 	Crud r.BudgetCrudInterface
 }
 
+func NewBudgetService(crud r.BudgetCrudInterface) *BudgetService {
+	if crud == nil {
+		panic("crud interface cannot be nil")
+	}
+	return &BudgetService{Crud: crud}
+}
+
 func (s *BudgetService) MakeBudget(dto m.BudgetDto) (*m.Budget, error) {
 	newBudget := m.Budget{
 		UserID: dto.UserID,
