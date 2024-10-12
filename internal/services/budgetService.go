@@ -17,7 +17,7 @@ func NewBudgetService(crud r.BudgetCrudInterface) *BudgetService {
 	return &BudgetService{Crud: crud}
 }
 
-func (s *BudgetService) MakeBudget(dto m.BudgetDto) (*m.Budget, error) {
+func (s *BudgetService) Make(dto m.BudgetDto) (*m.Budget, error) {
 	newBudget := m.Budget{
 		UserID: dto.UserID,
 		CategoryID: dto.CategoryID,
@@ -32,7 +32,7 @@ func (s *BudgetService) MakeBudget(dto m.BudgetDto) (*m.Budget, error) {
 	return &newBudget, nil
 }
 
-func (s *BudgetService) CheckBudget(id uint) (*m.Budget, error) {
+func (s *BudgetService) Check(id uint) (*m.Budget, error) {
 	budget, err := s.Crud.Get(id)
 	if err != nil {
 		return &m.Budget{}, err
@@ -40,7 +40,7 @@ func (s *BudgetService) CheckBudget(id uint) (*m.Budget, error) {
 	return budget, nil
 }
 
-func (s *BudgetService) UpdateBudget(id uint, dto m.BudgetDto) error {
+func (s *BudgetService) Revise(id uint, dto m.BudgetDto) error {
 	budget, err := s.Crud.Get(id)
 	if err != nil {
 		return fmt.Errorf("failed to fetch Budget: %w", err)
@@ -60,7 +60,7 @@ func (s *BudgetService) UpdateBudget(id uint, dto m.BudgetDto) error {
 	return nil
 }
 
-func (s *BudgetService) DeleteBudget(id uint) error {
+func (s *BudgetService) Remove(id uint) error {
 	err := s.Crud.Delete(id)
 	if err != nil {
 		return err

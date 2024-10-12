@@ -12,3 +12,10 @@ type Transaction struct {
 	Amount      float64   `json:"amount"`
 	Date        time.Time `json:"date" gorm:"index"`
 }
+
+type TransactionDto struct {
+	BudgetID    uint      `json:"batch_id"`
+	Description string    `json:"description"`
+	Amount      float64   `json:"amount"`
+	Date        time.Time `json:"date" gorm:"index"`
+}
