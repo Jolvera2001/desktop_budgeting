@@ -243,9 +243,64 @@ export namespace models {
 		    return a;
 		}
 	}
+	export class BudgetDto {
+	    user_id: number;
+	    category: number;
+	    name: string;
+	    amount: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new BudgetDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.user_id = source["user_id"];
+	        this.category = source["category"];
+	        this.name = source["name"];
+	        this.amount = source["amount"];
+	    }
+	}
 	
 	
 	
+	export class TransactionDto {
+	    batch_id: number;
+	    description: string;
+	    amount: number;
+	    // Go type: time
+	    date: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new TransactionDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.batch_id = source["batch_id"];
+	        this.description = source["description"];
+	        this.amount = source["amount"];
+	        this.date = this.convertValues(source["date"], null);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	
 	export class UserDto {
 	    name: string;
