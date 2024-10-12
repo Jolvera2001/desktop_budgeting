@@ -14,11 +14,15 @@ type TransactionCrudInterface interface {
 }
 
 type TransactionCrud struct {
-	repo *gorm.DB
+	Repo *gorm.DB
+}
+
+func NewTransactionCrud(repo *gorm.DB) *TransactionCrud {
+	return &TransactionCrud{Repo: repo}
 }
 
 func (c *TransactionCrud) Create(transaction *models.Transaction) (uint, error) {
-	res := c.repo.Create(transaction)
+	res := c.Repo.Create(transaction)
 	if res.Error != nil {
 		return 0, res.Error
 	}
@@ -27,7 +31,7 @@ func (c *TransactionCrud) Create(transaction *models.Transaction) (uint, error) 
 
 func (c *TransactionCrud) Get(id uint) (*models.Transaction, error) {
 	var transaction models.Transaction
-	res := c.repo.First(&transaction, id)
+	res := c.Repo.First(&transaction, id)
 	if res.Error != nil {
 		return &models.Transaction{}, res.Error
 	}
@@ -35,7 +39,7 @@ func (c *TransactionCrud) Get(id uint) (*models.Transaction, error) {
 }
 
 func (c *TransactionCrud) Update(transaction *models.Transaction) error {
-	res := c.repo.Save(transaction)
+	res := c.Repo.Save(transaction)
 	if res.Error != nil {
 		return res.Error
 	}
@@ -43,7 +47,7 @@ func (c *TransactionCrud) Update(transaction *models.Transaction) error {
 }
 
 func (c *TransactionCrud) Delete(id uint) error {
-	res := c.repo.Delete(&models.Transaction{}, id)
+	res := c.Repo.Delete(&models.Transaction{}, id)
 	if res.Error != nil {
 		return res.Error
 	}

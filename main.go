@@ -35,10 +35,12 @@ func main() {
 	// creating crud services
 	userRepo := repository.NewUserCrud(repo)
 	budgetRepo := repository.NewBudgetCrud(repo)
+	transactionRepo := repository.NewTransactionCrud(repo)
 
 	// creating services
 	userService := services.NewUserService(userRepo)
 	budgetService := services.NewBudgetService(budgetRepo)
+	transactionService := services.NewTransactionService(transactionRepo)
 
 	// Create application with options
 	err = wails.Run(&options.App{
@@ -54,6 +56,7 @@ func main() {
 			app,
 			userService,
 			budgetService,
+			transactionService,
 		},
 	})
 
