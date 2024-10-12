@@ -10,3 +10,10 @@ type Budget struct {
 	Amount       float64       `json:"amount"`
 	Transactions []Transaction `json:"transactions"`
 }
+
+type BudgetDto struct {
+	UserID       uint          `json:"user_id"`
+	CategoryID   uint          `json:"category"`
+	Name         string        `json:"name"`
+	Amount       float64       `json:"amount"`
+}
