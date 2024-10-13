@@ -1,3 +1,4 @@
+import BudgetAddDialog from '@/components/reusables/AddBudgetDialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -17,13 +18,7 @@ function Expenses() {
                                 <CardTitle>Budgets</CardTitle>
                                 <CardDescription>Your spending limits and current status</CardDescription>
                             </div>
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button variant="outline" size="icon">
-                                        <PlusCircle className='h-4 w-4' />
-                                    </Button>
-                                </DialogTrigger>
-                            </Dialog>
+                            <BudgetAddDialog />
                         </CardHeader>
                     </Card>
                 </div>

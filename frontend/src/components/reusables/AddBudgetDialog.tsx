@@ -28,6 +28,21 @@ function BudgetAddDialog() {
                 }}>
                     <div className="grip gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name">Name</Label>
+                            <div className="col-span-3">
+                                <Input id="name" />
+                            </div>
+                            <Label htmlFor="amount">Amount</Label>
+                            <div className="col-span-3">
+                                <Input 
+                                    id="amount" 
+                                    type="number" 
+                                    min={0} 
+                                    max={100000000} 
+                                    step={0.01} 
+                                    placeholder="0.00" 
+                                />
+                            </div>
                             <Label htmlFor="category">Category</Label>
                             <div className="col-span-3">
                                 <Select>
@@ -46,3 +61,5 @@ function BudgetAddDialog() {
         </Dialog>
     )
 }
+
+export default BudgetAddDialog
