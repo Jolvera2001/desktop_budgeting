@@ -26,7 +26,7 @@ func main() {
 		panic("issue establishing local db")
 	}
 
-	err = repo.AutoMigrate(&m.User{}, &m.Budget{}, &m.Category{}, &m.Income{}, &m.Transaction{})
+	err = repo.AutoMigrate(&m.User{}, &m.Budget{}, &m.Income{}, &m.Transaction{})
 	if err != nil {
 		log.Fatalf("failed to perform migrations: %v", err)
 	}
