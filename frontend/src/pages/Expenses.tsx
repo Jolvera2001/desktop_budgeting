@@ -1,12 +1,9 @@
 import BudgetAddDialog from '@/components/reusables/AddBudgetDialog'
-import { Button } from '@/components/ui/button'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import useUserStore from '@/store/UserStore'
-import { PlusCircle } from 'lucide-react'
 
 function Expenses() {
-
+    const { selectedUser } = useUserStore();
     return (
         <>
             <div className="container mx-auto p-4 mt-4">
@@ -20,6 +17,20 @@ function Expenses() {
                             </div>
                             <BudgetAddDialog />
                         </CardHeader>
+                        <CardContent>
+                            {selectedUser?.budgets 
+                            ? selectedUser?.budgets.map((budget, index) => (
+                                <div key={budget.id} className='mb-4'>
+                                    <div className='flex justify-between items-center mb-2'>
+                                        <span className='font-medium'>{budget.name}</span>
+                                        <span className='text-sm text-gray-500'>
+                                            ${budget.amount.toFixed(2)}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))
+                            :<p>No Budgets Created Yet</p>}
+                        </CardContent>
                     </Card>
                 </div>
             </div>

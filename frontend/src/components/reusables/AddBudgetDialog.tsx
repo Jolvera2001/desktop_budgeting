@@ -7,7 +7,7 @@ import { PlusCircle } from "lucide-react";
 import useUserStore from "../../store/UserStore"
 
 import { Make } from "../../../wailsjs/go/services/BudgetService"
-// import { BudgetDto } from "../../../wailsjs/go/models"
+import { models } from "../../../wailsjs/go/models"
 
 function BudgetAddDialog() {
     const { selectedUser } = useUserStore();
@@ -17,7 +17,7 @@ function BudgetAddDialog() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const budgetDto: BudgetDto = new BudgetDto({
+        const budgetDto: models.BudgetDto = new models.BudgetDto({
             user_id: selectedUser?.id,
             name: inputName,
             amount: parseFloat(inputAmount)
@@ -28,6 +28,7 @@ function BudgetAddDialog() {
             console.log("Budget added", result);
             setInputAmount("");
             setInputName("");
+            selectedUser?.budgets.push(result)
         } catch (e) {
             console.error("error adding budget: ", e);
         }
@@ -69,6 +70,7 @@ function BudgetAddDialog() {
                                     onChange={(e) => setInputAmount(e.target.value)} 
                                 />
                             </div>
+                            <Button type="submit">Add</Button>
                         </div>
                     </div>
                 </form>
