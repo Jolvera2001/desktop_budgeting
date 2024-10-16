@@ -1,5 +1,7 @@
 # Mermaid ER Diagram
 
+This contains the diagram for our models and a basic outline on how they relate to one another
+
 ```mermaid
 erDiagram
 
