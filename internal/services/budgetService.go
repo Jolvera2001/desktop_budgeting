@@ -20,7 +20,6 @@ func NewBudgetService(crud r.BudgetCrudInterface) *BudgetService {
 func (s *BudgetService) Make(dto m.BudgetDto) (*m.Budget, error) {
 	newBudget := m.Budget{
 		UserID: dto.UserID,
-		CategoryID: dto.CategoryID,
 		Name: dto.Name,
 		Amount: dto.Amount,
 	}
