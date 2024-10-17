@@ -67,3 +67,16 @@ func (s *BudgetService) Remove(id uint) error {
 	return nil
 }
 
+func (s *BudgetService) CalculateTotalSpent(id uint) (float64, error) {
+	res, err := s.Crud.Get(id)
+	if err != nil {
+		return 0, err
+	}
+
+	var total float64
+	for _, transaction := range res.Transactions {
+		total += transaction.Amount
+	}
+	return total, nil
+}
+
