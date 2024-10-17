@@ -1,9 +1,13 @@
 import BudgetAddDialog from '@/components/reusables/AddBudgetDialog'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress';
 import useUserStore from '@/store/UserStore'
 
 function Expenses() {
     const { selectedUser } = useUserStore();
+
+
+
     return (
         <>
             <div className="container mx-auto p-4 mt-4">
@@ -26,6 +30,7 @@ function Expenses() {
                                         <span className='text-sm text-gray-500'>
                                             ${budget.amount.toFixed(2)}
                                         </span>
+                                        <Progress value={2} className='h-2' />
                                     </div>
                                 </div>
                             ))

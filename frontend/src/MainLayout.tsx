@@ -1,10 +1,13 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs"
-import { Home, CircleDollarSign, Wallet } from "lucide-react"
+import { Home, CircleDollarSign, Wallet, LogOut } from "lucide-react"
+import useUserStore from "./store/UserStore";
 
 function MainLayout() {
     const navigate = useNavigate();
     const location = useLocation();
+
+    const { setUser } = useUserStore();
 
     const getCurrentTab = () => {
         const path = location.pathname;
@@ -25,6 +28,9 @@ function MainLayout() {
             case 'expenses':
                 navigate('/home/expenses');
                 break;
+            case 'logout':
+                setUser(null);
+                navigate('/');
             default:
                 navigate('/home');
         }
@@ -64,6 +70,10 @@ function MainLayout() {
                             <TabsTrigger value="income" className="w-full flex items-center justify-start gap-2 responsive-tab">
                                 <Wallet size={16} />
                                 <span className="tab-text">Income</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="logout" className="w-full flex items-center justify-start gap-2 responsive-tab mt-auto mb-4">
+                                <LogOut size={16} />
+                                <span className="tab-text">Logout</span>
                             </TabsTrigger>
                         </TabsList>
                     </Tabs>
